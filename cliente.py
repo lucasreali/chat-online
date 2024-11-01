@@ -17,10 +17,8 @@ class ClienteChat:
             # Faz a coneção com o servidor
             self.cliente.connect((self.host, self.port))
             print("Conectado ao servidor")
-            
 
             # Envia nome do usuario para o servidor
-            self.nome = input("Digite seu nome: ")
             self.cliente.send(self.nome.encode())
             
             threading.Thread(target=self.receber_mensagem).start()
@@ -30,29 +28,18 @@ class ClienteChat:
         except Exception as e:
             print(f"Erro de conexão: {e}")
 
-    def enviar_mensagem(self):
-        while True:
-            mensagem = input("Você: ")
-
-            # Verifica se o cliente deseja sair
-            if mensagem.lower() == '#sair':
-                self.cliente.send(mensagem.encode())
-                self.cliente.close()
-                break
-            else:
-                self.cliente.send(mensagem.encode())
+    def enviar_mensagem(self, mensagem):
+        if mensagem.lower() == 'sair':
+            self.cliente.send(mensagem.encode())
+            self.cliente.close()
+        else:
+            self.cliente.send(mensagem.encode())
 
     def receber_mensagem(self):
-        while True:
-            try:
-                # Recebe mensagens do servidor
-                mensagem = self.cliente.recv(1024).decode()
-                print(mensagem)
-            except Exception as e:
-                print(f"Erro ao receber mensagem: {e}")
-                self.cliente.close()
-                break
+        try:
+            mensagem = self.cliente.recv(1024).decode()
+            return mensagem
+        except Exception as e:
+            print(f"Erro ao receber mensagem: {e}")
+            return None
 
-if __name__ == "__main__":
-    cliente = ClienteChat()  # CLIENTE DEVE COLOCAR O IP DO SERVIDOR
-    cliente.conectar()
