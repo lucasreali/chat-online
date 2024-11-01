@@ -77,5 +77,5 @@ class ServidorChat:
             self.enviar_broadcast(f"{nome} saiu do chat.", cliente_socket)
 
 if __name__ == "__main__":
-    servidor = ServidorChat()
+    servidor = ServidorChat() # HOST DEVE COLOCAR O IP PROPRIO
     servidor.iniciar_servidor()
