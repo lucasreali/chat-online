@@ -29,7 +29,7 @@ class ClienteChat:
             print(f"Erro de conexão: {e}")
 
     def enviar_mensagem(self, mensagem):
-        if mensagem.lower() == 'sair':
+        if mensagem.lower() == '#sair':
             self.cliente.send(mensagem.encode())
             self.cliente.close()
         else:

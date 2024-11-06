@@ -2,23 +2,27 @@ import socket
 import threading
 
 class ServidorChat:
+    # TODO: Adcionar comentarios em todo o codigo para facilitar a apresentação
     def __init__(self, host='localhost', port=5001):
         self.host = host
         self.port = port
-        self.clientes = {}
-        self.servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.servidor.bind((self.host, self.port))
-        self.servidor.listen(5)
+
+        self.clientes = {} # Armazena os clientes    '6666': 'Lucas'
+        
+        self.servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Cria o secket
+        self.servidor.bind((self.host, self.port)) # Vincula o secket ao host e a pora fornecidas
+        self.servidor.listen() # coloca o socket para escutar as conexões
+
         print(f"Servidor iniciado em {self.host}:{self.port}")
 
     def iniciar_servidor(self):
         while True:
-            cliente_socket, endereco = self.servidor.accept()
-            threading.Thread(target=self.gerenciar_cliente, args=(cliente_socket,)).start()
+            cliente_socket, _ = self.servidor.accept() # Aguarda novas conexoes
+            threading.Thread(target=self.gerenciar_cliente, args=(cliente_socket,)).start() # Cria uma thread
 
     def gerenciar_cliente(self, cliente_socket):
         try:
-            nome = cliente_socket.recv(1024).decode()
+            nome = cliente_socket.recv(1024).decode() # Recebe o nome do clinte
             self.clientes[cliente_socket] = nome
             print(f"{nome} se conectou ao servidor.")
 
@@ -26,10 +30,10 @@ class ServidorChat:
 
             while True:
                 mensagem = cliente_socket.recv(1024).decode()
-                if mensagem.lower() == 'sair':
+                if mensagem.lower() == '#sair':
                     self.remover_cliente(cliente_socket)
                     break
-                elif mensagem.startswith("/"):
+                elif mensagem.startswith("#"):
                     self.enviar_unicast(mensagem, cliente_socket)
                 else:
                     mensagem_formatada = f"{nome}: {mensagem}"
@@ -40,17 +44,17 @@ class ServidorChat:
             self.remover_cliente(cliente_socket)
 
     def enviar_broadcast(self, mensagem, cliente_socket):
-        for cliente in self.clientes:
+        for cliente in self.clientes: # Passa em todos os elementso da lista
             if cliente != cliente_socket:
                 try:
-                    cliente.send(mensagem.encode())
+                    cliente.send(mensagem.encode()) # Envia mensagem
                 except Exception as e:
                     print(f"Erro ao enviar mensagem: {e}")
                     self.remover_cliente(cliente)
 
     def enviar_unicast(self, mensagem, cliente_socket):
         try:
-            _, conteudo = mensagem.split("/", 1)
+            _, conteudo = mensagem.split("#", 1)
             destinatario_nome, conteudo = conteudo.split(" ", 1)
             remetente_nome = self.clientes[cliente_socket]
             mensagem_formatada = f"[Privado] {remetente_nome}: {conteudo}"
