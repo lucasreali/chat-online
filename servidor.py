@@ -8,7 +8,7 @@ class ServidorChat:
         self.port = port
 
         self.clientes = {} # Armazena os clientes    '6666': 'Lucas'
-        
+
         self.servidor = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Cria o secket
         self.servidor.bind((self.host, self.port)) # Vincula o secket ao host e a pora fornecidas
         self.servidor.listen() # coloca o socket para escutar as conexões
