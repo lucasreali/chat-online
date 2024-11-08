@@ -45,7 +45,7 @@ class ServidorChat:
 
     def enviar_broadcast(self, mensagem, cliente_socket):
         for cliente in self.clientes: # Passa em todos os elementso da lista
-            if cliente != cliente_socket:
+            if cliente != cliente_socket: # Evita enviar mensagem para si proprio
                 try:
                     cliente.send(mensagem.encode()) # Envia mensagem
                 except Exception as e:
@@ -70,7 +70,7 @@ class ServidorChat:
             else:
                 cliente_socket.send(f"Usuário {destinatario_nome} não encontrado.".encode())
         except ValueError:
-            cliente_socket.send("Formato de mensagem inválido. Use: /nomedodestinatario mensagem".encode())
+            cliente_socket.send("Formato de mensagem inválido. Use: #nomedodestinatario mensagem".encode())
 
     def remover_cliente(self, cliente_socket):
         if cliente_socket in self.clientes:

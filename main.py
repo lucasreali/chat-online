@@ -19,6 +19,12 @@ def enviar_mensagem():
         cliente_chat.enviar_mensagem(mensagem)
 
 def receber_mensagens():
+    text_area.config(state='normal')
+    text_area.insert(tk.END, "Digite '#sair' para sair\nDigite '#nomedestinatario suamensagem' para enviar umas mensagem privada" + "\n")
+    text_area.insert(tk.END, "Digite seu nome" + "\n")
+    text_area.config(state='disabled')
+
+
     while True:
         mensagem = cliente_chat.receber_mensagem()
         if mensagem:
