@@ -4,7 +4,7 @@ import threading
 
 def conectar():
     global cliente_chat
-    cliente_chat = cliente.ClienteChat()  # Inserrir IP do servidor
+    cliente_chat = cliente.ClienteChat('192.168.84.242')  # Inserrir IP do servidor
     threading.Thread(target=cliente_chat.conectar).start()
     threading.Thread(target=receber_mensagens).start()
 
